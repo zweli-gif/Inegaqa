@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>igaqa | Dom & Sab</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;1,300&family=DM+Mono:wght@400;500&family=Source+Serif+4:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #1a1714;
+            --text-primary: #e8e0d6;
+            --text-muted: #8a7e72;
+            --text-subtle: #b5a898;
+            --border-color: rgba(186,178,166, 0.15);
+            --card-bg: rgba(186,178,166, 0.06);
+            --yes-green: #2d6a4f;
+            --no-red: #9d0208;
+            --hold-amber: #b5651d;
+        }
+
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            font-family: 'Source Serif 4', serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 600px;
+            margin-bottom: 100px;
+        }
+
+        /* Header Styles */
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-top: 20px;
+        }
+
+        .est-date {
+            font-family: 'DM Mono', monospace;
+            font-size: 10px;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        h1 {
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 300;
+            font-style: italic;
+            font-size: 3.5rem;
+            margin: 0;
+            color: #f0e8de;
+        }
+
+        .subtitle {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.2rem;
+            color: var(--text-subtle);
+            margin-bottom: 20px;
+        }
+
+        .intro {
+            font-style: italic;
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            padding: 0 10px;
+            border-left: 1px solid var(--border-color);
+            margin: 20px auto;
+            max-width: 450px;
+        }
+
+        /* Progress Tracker */
+        .progress-bar {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .stat-box {
+            background: var(--card-bg);
+            padding: 15px 5px;
+            border: 1px solid var(--border-color);
+        }
+
+        .stat-value {
+            display: block;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.8rem;
+        }
+
+        .stat-label {
+            font-family: 'DM Mono', monospace;
+            font-size: 9px;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+        }
+
+        /* Legend */
+        details {
+            margin-bottom: 40px;
+            cursor: pointer;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 10px;
+        }
+
+        summary {
+            font-family: 'DM Mono', monospace;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-subtle);
+            list-style: none;
+        }
+
+        .legend-content {
+            display: flex;
+            gap: 20px;
+            padding-top: 15px;
+            font-family: 'DM Mono', monospace;
+            font-size: 10px;
+        }
+
+        .legend-item { display: flex; align-items: center; gap: 8px; }
+        .dot { width: 8px; height: 8px; border-radius: 50%; }
+
+        /* Pact Items */
+        .category-header {
+            font-family: 'DM Mono', monospace;
+            font-size: 12px;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin: 40px 0 20px 0;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 5px;
+        }
+
+        .pact-item {
+            background: var(--card-bg);
+            padding: 20px;
+            margin-bottom: 15px;
+            border-left: 2px solid transparent;
+            transition: border-color 0.3s;
+        }
+
+        .pact-item.agreed { border-left-color: var(--yes-green); }
+
+        .pact-text {
+            font-size: 15.5px;
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        /* Voting UI */
+        .voting-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .vote-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .voter-name {
+            font-family: 'DM Mono', monospace;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-muted);
+            width: 40px;
+        }
+
+        .vote-options {
+            display: flex;
+            gap: 10px;
+        }
+
+        .vote-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: 1px solid var(--border-color);
+            background: transparent;
+            color: var(--text-muted);
+            font-family: 'DM Mono', monospace;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .vote-btn[data-val="Y"].active { background: var(--yes-green); color: white; border-color: var(--yes-green); }
+        .vote-btn[data-val="N"].active { background: var(--no-red); color: white; border-color: var(--no-red); }
+        .vote-btn[data-val="H"].active { background: var(--hold-amber); color: white; border-color: var(--hold-amber); }
+
+        /* Form */
+        .add-pact-form {
+            margin-top: 60px;
+            padding: 30px;
+            border: 1px solid var(--border-color);
+        }
+
+        input, textarea, select {
+            width: 100%;
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 12px;
+            margin-bottom: 15px;
+            font-family: 'Source Serif 4', serif;
+        }
+
+        button.submit-btn, button.download-btn {
+            width: 100%;
+            background: var(--text-primary);
+            color: var(--bg-color);
+            border: none;
+            padding: 15px;
+            font-family: 'DM Mono', monospace;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .download-btn {
+            background: transparent;
+            color: var(--text-subtle);
+            border: 1px solid var(--border-color);
+            margin-top: 40px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <span class="est-date">Est. 13 January 2026</span>
+        <h1>igaqa</h1>
+        <div class="subtitle">Dom & Sab — the relationship we design together</div>
+        <p class="intro">
+            "We already did the brave part. Now let's make it the most extraordinary relationship we've ever known. Kate and Jack have nothing on us. Romeo and Juliet? Please. Dom and Sab are the only story."
+        </p>
+    </header>
+
+    <div class="progress-bar">
+        <div class="stat-box">
+            <span class="stat-value" id="dom-count">0</span>
+            <span class="stat-label">Dom's Votes</span>
+        </div>
+        <div class="stat-box">
+            <span class="stat-value" id="sab-count">0</span>
+            <span class="stat-label">Sab's Votes</span>
+        </div>
+        <div class="stat-box">
+            <span class="stat-value" id="pact-count">0</span>
+            <span class="stat-label">Joint "Y"</span>
+        </div>
+    </div>
+
+    <details>
+        <summary>Legend & Guidance</summary>
+        <div class="legend-content">
+            <div class="legend-item"><div class="dot" style="background:var(--yes-green)"></div> Y: I'm in</div>
+            <div class="legend-item"><div class="dot" style="background:var(--no-red)"></div> N: Can't do</div>
+            <div class="legend-item"><div class="dot" style="background:var(--hold-amber)"></div> H: Let's discuss</div>
+        </div>
+    </details>
+
+    <div id="pact-list">
+        </div>
+
+    <div class="add-pact-form">
+        <h3 class="stat-label" style="margin-bottom: 15px;">Add to our pact</h3>
+        <select id="new-category">
+            <option value="INTENTIONALITY">Intentionality</option>
+            <option value="OUR PRIVATE WORLD">Our Private World</option>
+            <option value="PRESENCE & ATTUNEMENT">Presence & Attunement</option>
+            <option value="INTEGRITY">Integrity</option>
+        </select>
+        <textarea id="new-text" rows="3" placeholder="Describe the commitment..."></textarea>
+        <button class="submit-btn" onclick="addNewItem()">Commit to Pact</button>
+    </div>
+
+    <button class="download-btn" onclick="downloadPact()">Download Pact (.txt)</button>
+</div>
+
+<script>
+    const initialItems = [
+        { id: 1, cat: "INTENTIONALITY", text: "Wednesday dinner date — non-negotiable" },
+        { id: 2, cat: "INTENTIONALITY", text: "Last weekend of every month: away weekend. Lovely hotel max 2hrs away. If we're broke, we stay with friends or sleep in the car by a river. This is not movable. We plan around it." },
+        { id: 3, cat: "INTENTIONALITY", text: "Birthdays are done exactly according to birthday boy's exact wishes, as far as finances allow. Birthdays are a thing" },
+        { id: 4, cat: "OUR PRIVATE WORLD", text: "Give a weekly nickname based on the fun I hope for you this week" },
+        { id: 5, cat: "OUR PRIVATE WORLD", text: "Thursday song challenge — learn lyrics and sing. Drop a lyric? The other picks your Friday outfit" },
+        { id: 6, cat: "OUR PRIVATE WORLD", text: "One day a week intimacy surprise — The shower chooses the method secretly. At 10pm the showee guesses." },
+        { id: 7, cat: "PRESENCE & ATTUNEMENT", text: "Each morning check in: here is how I hope this day goes for me" },
+        { id: 8, cat: "PRESENCE & ATTUNEMENT", text: "Daily wellbeing provocation — a thing I'd like you to consciously do today" },
+        { id: 9, cat: "INTEGRITY", text: "Official anniversary: 13 January 2026" }
+    ];
+
+    let pactData = JSON.parse(localStorage.getItem('igaqa_data')) || {
+        items: initialItems,
+        votes: {} // Stores votes as { itemId: { dom: 'Y', sab: 'N' } }
+    };
+
+    function render() {
+        const list = document.getElementById('pact-list');
+        list.innerHTML = '';
+        
+        const categories = ["INTENTIONALITY", "OUR PRIVATE WORLD", "PRESENCE & ATTUNEMENT", "INTEGRITY"];
+        
+        categories.forEach(cat => {
+            const catItems = pactData.items.filter(i => i.cat === cat);
+            if (catItems.length === 0) return;
+
+            const header = document.createElement('h2');
+            header.className = 'category-header';
+            header.innerText = cat;
+            list.appendChild(header);
+
+            catItems.forEach(item => {
+                const votes = pactData.votes[item.id] || { dom: null, sab: null };
+                const isAgreed = votes.dom === 'Y' && votes.sab === 'Y';
+                
+                const div = document.createElement('div');
+                div.className = `pact-item ${isAgreed ? 'agreed' : ''}`;
+                div.innerHTML = `
+                    <span class="pact-text">${item.text}</span>
+                    <div class="voting-container">
+                        ${renderVoteRow(item.id, 'dom', votes.dom)}
+                        ${renderVoteRow(item.id, 'sab', votes.sab)}
+                    </div>
+                `;
+                list.appendChild(div);
+            });
+        });
+
+        updateCounters();
+        localStorage.setItem('igaqa_data', JSON.stringify(pactData));
+    }
+
+    function renderVoteRow(itemId, person, currentVote) {
+        const options = ['Y', 'N', 'H'];
+        let buttons = options.map(opt => `
+            <button class="vote-btn ${currentVote === opt ? 'active' : ''}" 
+                    data-val="${opt}" 
+                    onclick="castVote(${itemId}, '${person}', '${opt}')">${opt}</button>
+        `).join('');
+
+        return `
+            <div class="vote-row">
+                <span class="voter-name">${person}</span>
+                <div class="vote-options">${buttons}</div>
+            </div>
+        `;
+    }
+
+    window.castVote = function(itemId, person, val) {
+        if (!pactData.votes[itemId]) pactData.votes[itemId] = { dom: null, sab: null };
+        
+        // Toggle off if clicking same value
+        if (pactData.votes[itemId][person] === val) {
+            pactData.votes[itemId][person] = null;
+        } else {
+            pactData.votes[itemId][person] = val;
+        }
+        render();
+    };
+
+    function updateCounters() {
+        let domCount = 0;
+        let sabCount = 0;
+        let pactCount = 0;
+
+        pactData.items.forEach(item => {
+            const v = pactData.votes[item.id];
+            if (v) {
+                if (v.dom) domCount++;
+                if (v.sab) sabCount++;
+                if (v.dom === 'Y' && v.sab === 'Y') pactCount++;
+            }
+        });
+
+        document.getElementById('dom-count').innerText = domCount;
+        document.getElementById('sab-count').innerText = sabCount;
+        document.getElementById('pact-count').innerText = pactCount;
+    }
+
+    window.addNewItem = function() {
+        const cat = document.getElementById('new-category').value;
+        const text = document.getElementById('new-text').value;
+        if (!text) return;
+
+        const newItem = {
+            id: Date.now(),
+            cat: cat,
+            text: text
+        };
+
+        pactData.items.push(newItem);
+        document.getElementById('new-text').value = '';
+        render();
+    };
+
+    window.downloadPact = function() {
+        let content = "IGAQA: THE RELATIONSHIP PACT\nDom & Sab | Est. 13 January 2026\n\n";
+        
+        pactData.items.forEach(item => {
+            const v = pactData.votes[item.id] || { dom: '-', sab: '-' };
+            content += `[${item.cat}]\n`;
+            content += `${item.text}\n`;
+            content += `Dom: ${v.dom || '-'} | Sab: ${v.sab || '-'}\n`;
+            content += `--------------------------\n`;
+        });
+
+        const blob = new Blob([content], { type: 'text/plain' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `igaqa-pact-${new Date().toISOString().slice(0,10)}.txt`;
+        a.click();
+    };
+
+    render();
+</script>
+
+</body>
+</html>
