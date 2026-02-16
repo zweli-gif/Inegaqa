@@ -2,11 +2,18 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>igaqa | Dom & Sab</title>
+    
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="igaqa">
+    <meta name="mobile-web-app-capable" content="yes">
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;1,300&family=DM+Mono:wght@400;500&family=Source+Serif+4:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
+    
     <style>
         :root {
             --bg-color: #1a1714;
@@ -29,6 +36,7 @@
             line-height: 1.6;
             margin: 0;
             padding: 20px;
+            padding-top: env(safe-area-inset-top); /* For iPhone notches */
             display: flex;
             justify-content: center;
         }
@@ -39,7 +47,6 @@
             margin-bottom: 100px;
         }
 
-        /* Header Styles */
         header {
             text-align: center;
             margin-bottom: 40px;
@@ -76,13 +83,13 @@
             font-style: italic;
             font-size: 0.95rem;
             color: var(--text-muted);
-            padding: 0 10px;
+            padding: 0 15px;
             border-left: 1px solid var(--border-color);
             margin: 20px auto;
             max-width: 450px;
         }
 
-        /* Progress Tracker */
+        /* Stats Row */
         .progress-bar {
             display: grid;
             grid-template-columns: 1fr 1fr 1fr;
@@ -130,7 +137,8 @@
 
         .legend-content {
             display: flex;
-            gap: 20px;
+            flex-wrap: wrap;
+            gap: 15px;
             padding-top: 15px;
             font-family: 'DM Mono', monospace;
             font-size: 10px;
@@ -156,7 +164,7 @@
             padding: 20px;
             margin-bottom: 15px;
             border-left: 2px solid transparent;
-            transition: border-color 0.3s;
+            transition: all 0.3s ease;
         }
 
         .pact-item.agreed { border-left-color: var(--yes-green); }
@@ -186,7 +194,7 @@
             text-transform: uppercase;
             letter-spacing: 0.1em;
             color: var(--text-muted);
-            width: 40px;
+            width: 45px;
         }
 
         .vote-options {
@@ -195,8 +203,8 @@
         }
 
         .vote-btn {
-            width: 36px;
-            height: 36px;
+            width: 38px;
+            height: 38px;
             border-radius: 50%;
             border: 1px solid var(--border-color);
             background: transparent;
@@ -213,21 +221,23 @@
         .vote-btn[data-val="N"].active { background: var(--no-red); color: white; border-color: var(--no-red); }
         .vote-btn[data-val="H"].active { background: var(--hold-amber); color: white; border-color: var(--hold-amber); }
 
-        /* Form */
+        /* Forms & Buttons */
         .add-pact-form {
             margin-top: 60px;
             padding: 30px;
             border: 1px solid var(--border-color);
+            background: rgba(255,255,255,0.02);
         }
 
         input, textarea, select {
             width: 100%;
-            background: transparent;
+            background: #25211d;
             border: 1px solid var(--border-color);
             color: var(--text-primary);
             padding: 12px;
             margin-bottom: 15px;
             font-family: 'Source Serif 4', serif;
+            font-size: 16px; /* Prevents iOS zoom on focus */
         }
 
         button.submit-btn, button.download-btn {
@@ -281,14 +291,13 @@
     <details>
         <summary>Legend & Guidance</summary>
         <div class="legend-content">
-            <div class="legend-item"><div class="dot" style="background:var(--yes-green)"></div> Y: I'm in</div>
-            <div class="legend-item"><div class="dot" style="background:var(--no-red)"></div> N: Can't do</div>
+            <div class="legend-item"><div class="dot" style="background:var(--yes-green)"></div> Y: Yes, I'm in</div>
+            <div class="legend-item"><div class="dot" style="background:var(--no-red)"></div> N: Can't do this one</div>
             <div class="legend-item"><div class="dot" style="background:var(--hold-amber)"></div> H: Let's discuss</div>
         </div>
     </details>
 
-    <div id="pact-list">
-        </div>
+    <div id="pact-list"></div>
 
     <div class="add-pact-form">
         <h3 class="stat-label" style="margin-bottom: 15px;">Add to our pact</h3>
@@ -311,7 +320,7 @@
         { id: 2, cat: "INTENTIONALITY", text: "Last weekend of every month: away weekend. Lovely hotel max 2hrs away. If we're broke, we stay with friends or sleep in the car by a river. This is not movable. We plan around it." },
         { id: 3, cat: "INTENTIONALITY", text: "Birthdays are done exactly according to birthday boy's exact wishes, as far as finances allow. Birthdays are a thing" },
         { id: 4, cat: "OUR PRIVATE WORLD", text: "Give a weekly nickname based on the fun I hope for you this week" },
-        { id: 5, cat: "OUR PRIVATE WORLD", text: "Thursday song challenge — learn lyrics and sing. Drop a lyric? The other picks your Friday outfit" },
+        { id: 5, cat: "OUR PRIVATE WORLD", text: "Thursday song challenge — each assigns the other an important song, both must learn lyrics and sing without dropping one. Drop a lyric? The other picks your Friday outfit" },
         { id: 6, cat: "OUR PRIVATE WORLD", text: "One day a week intimacy surprise — The shower chooses the method secretly. At 10pm the showee guesses." },
         { id: 7, cat: "PRESENCE & ATTUNEMENT", text: "Each morning check in: here is how I hope this day goes for me" },
         { id: 8, cat: "PRESENCE & ATTUNEMENT", text: "Daily wellbeing provocation — a thing I'd like you to consciously do today" },
@@ -320,7 +329,7 @@
 
     let pactData = JSON.parse(localStorage.getItem('igaqa_data')) || {
         items: initialItems,
-        votes: {} // Stores votes as { itemId: { dom: 'Y', sab: 'N' } }
+        votes: {}
     };
 
     function render() {
@@ -377,21 +386,12 @@
 
     window.castVote = function(itemId, person, val) {
         if (!pactData.votes[itemId]) pactData.votes[itemId] = { dom: null, sab: null };
-        
-        // Toggle off if clicking same value
-        if (pactData.votes[itemId][person] === val) {
-            pactData.votes[itemId][person] = null;
-        } else {
-            pactData.votes[itemId][person] = val;
-        }
+        pactData.votes[itemId][person] = (pactData.votes[itemId][person] === val) ? null : val;
         render();
     };
 
     function updateCounters() {
-        let domCount = 0;
-        let sabCount = 0;
-        let pactCount = 0;
-
+        let domCount = 0, sabCount = 0, pactCount = 0;
         pactData.items.forEach(item => {
             const v = pactData.votes[item.id];
             if (v) {
@@ -400,7 +400,6 @@
                 if (v.dom === 'Y' && v.sab === 'Y') pactCount++;
             }
         });
-
         document.getElementById('dom-count').innerText = domCount;
         document.getElementById('sab-count').innerText = sabCount;
         document.getElementById('pact-count').innerText = pactCount;
@@ -410,39 +409,26 @@
         const cat = document.getElementById('new-category').value;
         const text = document.getElementById('new-text').value;
         if (!text) return;
-
-        const newItem = {
-            id: Date.now(),
-            cat: cat,
-            text: text
-        };
-
-        pactData.items.push(newItem);
+        pactData.items.push({ id: Date.now(), cat: cat, text: text });
         document.getElementById('new-text').value = '';
         render();
     };
 
     window.downloadPact = function() {
         let content = "IGAQA: THE RELATIONSHIP PACT\nDom & Sab | Est. 13 January 2026\n\n";
-        
         pactData.items.forEach(item => {
             const v = pactData.votes[item.id] || { dom: '-', sab: '-' };
-            content += `[${item.cat}]\n`;
-            content += `${item.text}\n`;
-            content += `Dom: ${v.dom || '-'} | Sab: ${v.sab || '-'}\n`;
-            content += `--------------------------\n`;
+            content += `[${item.cat}]\n${item.text}\nDom: ${v.dom || '-'} | Sab: ${v.sab || '-'}\n--------------------------\n`;
         });
-
         const blob = new Blob([content], { type: 'text/plain' });
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = `igaqa-pact-${new Date().toISOString().slice(0,10)}.txt`;
+        a.download = `igaqa-pact.txt`;
         a.click();
     };
 
     render();
 </script>
-
 </body>
 </html>
